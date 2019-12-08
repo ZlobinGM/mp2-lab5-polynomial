@@ -15,10 +15,12 @@ struct Monom
 	Monom(double _c, const vector<int>& _pow) : c(_c), pow(_pow) {}
 	Monom(string m, int total_unkowns) :pow(total_unkowns) {
 		string unknowns("xyznk"), tmp, _x;
-		size_t pos;
-		for (size_t i = m.length()-1; i >= 0; i--)
-			if (pos = unknowns.find(m[i]) != string::npos)
-				m.insert(pos, " ");
+		m.push_back(' ');
+		for (size_t i = m.length() - 1; 0 <= i; i--)
+			if (unknowns.find(m[i]) != string::npos) {
+				m.insert(i + 1, " ");
+				m.insert(i, " ");
+			}
 		stringstream s(m);
 		s >> tmp;
 		c = stod(tmp);
