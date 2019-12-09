@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <ctime>
 #include <Windows.h>
+#include "polynom.h"
 
 using namespace std;
 

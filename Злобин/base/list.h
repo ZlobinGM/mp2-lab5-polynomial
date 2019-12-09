@@ -30,33 +30,37 @@ public:
 			length = _list.length;
 			pFirst = new Node<T>;
 			pFirst->data = _list.pFirst->data;
-			Node<T>* p = pFirst, *_p = _list.pFirst->pNext, *tmp;
-			while (_p != nullptr) {
+			Node<T>* p = pFirst, *tmp;
+			for (Node<T>* _p = _list.pFirst->pNext; _p != nullptr; _p = _p->pNext;)	{
 				tmp = new Node<T>;
 				tmp->data = _p->data;
 				p->pNext = tmp;
 				p = p->pNext;
-				_p = _p->pNext;
 			}
+			p->pNext = nullptr;
 		}
 	}
-	~List()
+	List(const T& _data) 
 	{
-		Node<T>* p = pFirst;
-		while (p != nullptr) {
+		pFirst = new Node<T>;
+		pFirst->data = _data;
+		pFirst->pNext = nullptr;
+		length = 1;
+	}
+	virtual ~List()
+	{
+		for (Node<T>* p = pFirst; p != nullptr; p = pFirst)	{
 			pFirst = p->pNext;
 			delete p;
-			p = pFirst;
 		}
 	}
 
 	List<T>& operator=(const List<T>& _list)
 	{
 		Node<T>* p = pFirst;
-		while (p != nullptr) {
+		for (Node<T>* p = pFirst; p != nullptr; p = pFirst) {
 			pFirst = p->pNext;
 			delete p;
-			p = pFirst;
 		}
 
 		length = _list.length;
@@ -67,26 +71,22 @@ public:
 
 		pFirst = new Node<T>;
 		pFirst->data = _list.pFirst->data;
-		p = pFirst;
-		Node<T>* _p = _list.pFirst->pNext, * tmp;
-		while (_p != nullptr) {
+		Node<T>* p = pFirst, * tmp;
+		for (Node<T>*_p = _list.pFirst->pNext; _p != nullptr; _p = _p->pNext) {
 			tmp = new Node<T>;
 			tmp->data = _p->data;
 			p->pNext = tmp;
 			p = p->pNext;
-			_p = _p->pNext;
 		}
+		p->pNext = nullptr;
 		return *this;
 	}
 	T& operator[](int i)
 	{
 		if (i >= length || i < 0) throw "out_of_range";
-		int count = 0;
 		Node<T>* p = pFirst;
-		while (i != count) {
+		for (int count = 0; count != i; count++)
 			p = p->pNext;
-			count++;
-		}
 		return p->data;
 	}
 
@@ -95,16 +95,20 @@ public:
 		if (pFirst == nullptr) {
 			pFirst = new Node<T>;
 			pFirst->data = _data;
+			pFirst->pNext = nullptr;
 			length++;
 			return;
 		}
 		Node<T>* p = pFirst, * tmp = new Node<T>;
 		while (p->pNext != nullptr) { p = p->pNext; }
 		tmp->data = _data;
+		tmp->pNext = nullptr;
 		p->pNext = tmp;
+		length++;
 	}
-	void Delete(int i)
+	virtual void Delete(int i)
 	{
+		if (length == 0)return;
 		if (i >= length || i < 0) throw "out_of_range";
 		Node<T>* p = pFirst, * _p;
 		if (i == 0)	{
@@ -114,18 +118,16 @@ public:
 			return;
 		}
 
-		int count = 1;
-		while (count < i) {
+		for (int count = 1; count < i; count++)
 			p = p->pNext;
-			count++;
-		}
 		_p = p->pNext;
 		p->pNext = _p->pNext;
 		delete _p;
 		length--;
 	}
-	void Delete(const T& _data)
+	virtual void Delete(const T& _data)
 	{
+		if (length == 0)return;
 		Node<T>* p = pFirst, * _p;
 		if (pFirst->data == _data) {
 			pFirst = pFirst->pNext;
@@ -134,11 +136,14 @@ public:
 			return;
 		}
 
-		while (p->pNext->data != _data) { p = p->pNext; }
-		_p = p->pNext;
-		p->pNext = _p->pNext;
-		delete _p;
-		length--;
+		for (; p->pNext != nullptr; p = p->pNext)
+			if (p->pNext->data == _data) {
+				_p = p->pNext;
+				p->pNext = _p->pNext;
+				delete _p;
+				length--;
+				return;
+			}
 	}
 	int Length() { return length; }
 };
