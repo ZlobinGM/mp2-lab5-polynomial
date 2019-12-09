@@ -4,16 +4,17 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <cmath>
 
 using namespace std;
 
 struct Monom
 {
 	double c;
-	vector<int> pow; 
-	Monom() : c(0), pow(0) {}
-	Monom(double _c, const vector<int>& _pow) : c(_c), pow(_pow) {}
-	Monom(string m, int total_unkowns) :pow(total_unkowns) {
+	vector<int> power; 
+	Monom() : c(0), power(0) {}
+	Monom(double _c, const vector<int>& _power) : c(_c), power(_power) {}
+	Monom(string m, int total_unkowns) :power(total_unkowns) {
 		string unknowns("xyznk"), tmp, _x;
 		m.push_back(' ');
 		for (size_t i = m.length() - 1; 0 <= i; i--)
@@ -22,36 +23,40 @@ struct Monom
 				m.insert(i, " ");
 			}
 		stringstream s(m);
-		s >> tmp;
-		c = stod(tmp);
-		for (size_t i = 0; i < pow.size(); i++)
+		vector<string> v;
+		while (s >> tmp) v.push_back(tmp);
+		c = stod(v.at(0));
+		for (size_t i = 1; i < v.size(); i++)
 		{
-			s >> _x >> tmp;
-			if (unknowns.find(tmp) != string::npos) {
-				s << tmp;
+			_x = v.at(i);
+			if (i + 1 == v.size() || unknowns.find(tmp) != string::npos) {
 				tmp = "1";
+				power[unknowns.find(_x)] = stoi(tmp);
+				continue;
 			}
-			pow[unknowns.find(_x)] = stoi(tmp);
+			tmp = v.at(++i);
+			power[unknowns.find(_x)] = stoi(tmp);
 		}
 	}
+	Monom(const Monom& _monom) :c(_monom.c), power(_monom.power) {}
 
 	bool operator< (const Monom& _monom)
 	{
-		if (pow.size() != _monom.pow.size()) throw "not_equal";
-		for (size_t i = 0; i < pow.size(); i++)	{
-			if (pow[i] == _monom.pow[i]) continue;
+		if (power.size() != _monom.power.size()) throw "not_equal";
+		for (size_t i = 0; i < power.size(); i++)	{
+			if (power[i] == _monom.power[i]) continue;
 			else
-				return (pow[i] < _monom.pow[i]) ? true : false;
+				return (power[i] < _monom.power[i]) ? true : false;
 		}
 		return false;
 	}
 	bool operator> (const Monom& _monom)
 	{
-		if (pow.size() != _monom.pow.size()) throw "not_equal";
-		for (size_t i = 0; i < pow.size(); i++) {
-			if (pow[i] == _monom.pow[i]) continue;
+		if (power.size() != _monom.power.size()) throw "not_equal";
+		for (size_t i = 0; i < power.size(); i++) {
+			if (power[i] == _monom.power[i]) continue;
 			else
-				return (pow[i] > _monom.pow[i]) ? true : false;
+				return (power[i] > _monom.power[i]) ? true : false;
 		}
 		return false;
 	}
@@ -59,9 +64,9 @@ struct Monom
 	bool operator>= (const Monom& _monom) { return !(*this < _monom); }
 	bool operator== (const Monom& _monom)
 	{
-		if (pow.size() != _monom.pow.size()) throw "not_equal";
-		for (size_t i = 0; i < pow.size(); i++) {
-			if (pow[i] != _monom.pow[i]) return false;
+		if (power.size() != _monom.power.size()) throw "not_equal";
+		for (size_t i = 0; i < power.size(); i++) {
+			if (power[i] != _monom.power[i]) return false;
 		}
 		return true;
 	}
@@ -69,15 +74,15 @@ struct Monom
 	void Differential(char _x, int deg) {
 		string unknowns("xyznk");
 		int index = unknowns.find(_x);
-		if (pow[index] < deg) {
+		if (power[index] < deg) {
 			c = 0;
-			for each (int d in pow) { d = 0; }
+			for each (int d in power) { d = 0; }
 			return;
 		}
 		for (size_t i = 0; i < deg; i++)
 		{
-			c *= pow[index];
-			pow[index]--;
+			c *= power[index];
+			power[index]--;
 		}
 	}
 	void Integral(char _x, int deg) {
@@ -85,15 +90,21 @@ struct Monom
 		int index = unknowns.find(_x);
 		for (size_t i = 0; i < deg; i++)
 		{
-			pow[index]++;
-			c /= pow[index];
+			power[index]++;
+			c /= power[index];
 		}
 	}
 	bool IsExist() { return c == 0; }
-	int GetPow(int order) { return pow[order]; }
+	int GetPow(int order) { return power[order]; }
 	int GetPow(char _x) {
 		string unknowns("xyznk");
-		return pow[unknowns.find(_x)];
+		return power[unknowns.find(_x)];
+	}
+	double Result(const vector<double>& _res) {
+		double res = c;
+		for (size_t i = 0; i < power.size(); i++)
+			res *= pow(_res[i], power[i]);
+		return res;
 	}
 };
 
