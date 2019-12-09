@@ -78,6 +78,11 @@ struct Monom
 		power = _monom.power;
 		return *this;
 	}
+	Monom operator* (double _c) {
+		Monom res(*this);
+		res.c *= _c;
+		return res;
+	}
 	Monom operator* (const Monom& _monom) {
 		Monom res(_monom);
 		res.c *= c;
@@ -135,6 +140,14 @@ struct Monom
 		for (size_t i = 0; i < power.size(); i++)
 			cout << "\t" << power.at(i);
 		cout << endl;
+	}
+
+	friend ostream& operator<< (ostream& out, const Monom& _monom) {
+		out << _monom.c;
+		string unknows = "xyznk";
+		for (size_t i = 0; i < _monom.power.size(); i++)
+			out << unknows[i] << _monom.power[i];
+		return out;
 	}
 };
 

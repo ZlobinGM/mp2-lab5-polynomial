@@ -5,7 +5,7 @@ Polynom::Polynom(string s, int _total_unkowns) : total_unknowns(_total_unkowns)
 	for (size_t i = 0; i < s.length(); i++)
 	{
 		if (s[i] == '+')s[i] = ' ';
-		if (s[i] == '-' && s[i + 1] == ' ') {
+		if (s[i] == '-' && i + 1 < s.length() && s[i + 1] == ' ') {
 			s[i] = ' ';
 			s[i + 1] = '-';
 		}
@@ -126,7 +126,7 @@ void Polynom::Differential(char _x, int deg)
 	for (p = _p; p->pNext != nullptr;)
 	{
 		int var = p->pNext->data.GetPow(_x);
-		if (var < deg && var > 0) {
+		if (var < deg && var >= 0) {
 			Node<Monom>* tmp = p->pNext;
 			p->pNext = tmp->pNext;
 			pFirst = (tmp == pFirst) ? p->pNext : pFirst;
@@ -167,4 +167,12 @@ void Polynom::GetTable()
 	}
 	for (Node<Monom>* p = pFirst; p != nullptr; p = p->pNext)
 		p->data.Print();
+}
+
+ostream& operator<<(ostream& out, const Polynom& _polynom)
+{
+	for (Node<Monom>* p = _polynom.pFirst; p != nullptr; p = p->pNext)
+		out << '\t' << p->data;
+	out << endl;
+	return out;
 }
