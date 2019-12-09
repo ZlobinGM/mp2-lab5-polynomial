@@ -16,6 +16,7 @@ public:
 	Polynom(string s, int _total_unkowns);
 	Polynom(const Polynom& _polynom) : total_unknowns(_polynom.total_unknowns), List(_polynom) {}
 
+	Polynom& operator= (const Polynom& _polynom);
 	Polynom operator+ (const Polynom& _polynom);
 	Polynom operator- (const Polynom& _polynom);
 	Polynom operator*(const Monom& _monom);

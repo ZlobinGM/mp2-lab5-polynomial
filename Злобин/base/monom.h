@@ -50,7 +50,7 @@ struct Monom
 		for (size_t i = 0; i < power.size(); i++)	{
 			if (power[i] == _monom.power[i]) continue;
 			else
-				return (power[i] < _monom.power[i]) ? true : false;
+				return power[i] < _monom.power[i];
 		}
 		return false;
 	}
@@ -59,7 +59,7 @@ struct Monom
 		for (size_t i = 0; i < power.size(); i++) {
 			if (power[i] == _monom.power[i]) continue;
 			else
-				return (power[i] > _monom.power[i]) ? true : false;
+				return power[i] > _monom.power[i];
 		}
 		return false;
 	}
@@ -67,9 +67,8 @@ struct Monom
 	bool operator>= (const Monom& _monom) { return !(*this < _monom); }
 	bool operator== (const Monom& _monom) {
 		if (power.size() != _monom.power.size()) throw "not_equal";
-		for (size_t i = 0; i < power.size(); i++) {
+		for (size_t i = 0; i < power.size(); i++)
 			if (power[i] != _monom.power[i]) return false;
-		}
 		return true;
 	}
 

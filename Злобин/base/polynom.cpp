@@ -21,10 +21,39 @@ Polynom::Polynom(string s, int _total_unkowns) : total_unknowns(_total_unkowns)
 	}
 }
 
+Polynom& Polynom::operator=(const Polynom& _polynom)
+{
+	total_unknowns = _polynom.total_unknowns;
+	Node<Monom>* p = pFirst;
+	for (Node<Monom>* p = pFirst; p != nullptr; p = pFirst) {
+		pFirst = p->pNext;
+		delete p;
+	}
+
+	length = _polynom.length;
+	if (_polynom.pFirst == nullptr) {
+		pFirst = nullptr;
+		return *this;
+	}
+
+	pFirst = new Node<Monom>;
+	pFirst->data = _polynom.pFirst->data;
+	p = pFirst;
+	Node<Monom>* tmp;
+	for (Node<Monom>* _p = _polynom.pFirst->pNext; _p != nullptr; _p = _p->pNext) {
+		tmp = new Node<Monom>;
+		tmp->data = _p->data;
+		p->pNext = tmp;
+		p = p->pNext;
+	}
+	p->pNext = nullptr;
+	return *this;
+}
+
 Polynom Polynom::operator+(const Polynom& _polynom)
 {
-	Polynom res(_polynom);
-	for (Node<Monom>* p = pFirst; p != nullptr; p = p->pNext)
+	Polynom res(*this);
+	for (Node<Monom>* p = _polynom.pFirst; p != nullptr; p = p->pNext)
 		res.Insert(p->data);
 	return res;
 }
@@ -93,8 +122,10 @@ void Polynom::Insert(const Monom& m)
 			Node<Monom>* tmp = new Node<Monom>;
 			tmp->data = m;
 			tmp->pNext = p->pNext;
+			pFirst = (p->pNext == pFirst) ? tmp : pFirst;
 			p->pNext = tmp;
 			length++;
+			delete _p;
 			return;
 		}
 		if (p->pNext->data == m) {
@@ -105,10 +136,12 @@ void Polynom::Insert(const Monom& m)
 				pFirst = (tmp == pFirst) ? p : pFirst;
 				delete tmp;
 				length--;
+				delete _p;
 				return;
 			}
 			else {
 				p->pNext->data.c += m.c;
+				delete _p;
 				return;
 			}
 		}
@@ -116,6 +149,7 @@ void Polynom::Insert(const Monom& m)
 	_p->data = m;
 	_p->pNext = nullptr;
 	p->pNext = _p;
+	pFirst = (p->pNext == pFirst) ? _p : pFirst;
 	length++;
 }
 
