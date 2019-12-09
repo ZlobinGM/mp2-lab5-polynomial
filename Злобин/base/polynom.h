@@ -3,7 +3,6 @@
 
 #include "list.h"
 #include "monom.h"
-#include <iostream>
 
 using namespace std;
 
@@ -19,6 +18,7 @@ public:
 
 	Polynom operator+ (const Polynom& _polynom);
 	Polynom operator- (const Polynom& _polynom);
+	Polynom operator*(const Monom& _monom);
 	Polynom operator*(const Monom& _monom) const;
 	Polynom operator* (const Polynom& _polynom);
 	Polynom operator/ (const Monom& _monom);

@@ -32,8 +32,19 @@ Polynom Polynom::operator+(const Polynom& _polynom)
 Polynom Polynom::operator-(const Polynom& _polynom)
 {
 	Polynom res(*this);
-	for (Node<Monom>* p = _polynom.pFirst; p != nullptr; p = p->pNext)
-		res.Insert(p->data * -1);
+	for (Node<Monom>* p = _polynom.pFirst; p != nullptr; p = p->pNext) {
+		p->data.c *= -1;
+		res.Insert(p->data);
+	}
+	return res;
+}
+
+Polynom Polynom::operator*(const Monom& _monom)
+{
+	if (_monom.c == 0)return Polynom();
+	Polynom res(*this);
+	for (Node<Monom>* p = res.pFirst; p != nullptr; p = p->pNext)
+		p->data = p->data * _monom;
 	return res;
 }
 
@@ -151,7 +162,7 @@ void Polynom::GetTable()
 		cout << "\t" << unknowns[i];
 	cout << endl;
 	if (pFirst == nullptr) {
-		Monom(0, total_unknowns).Print;
+		Monom(0, total_unknowns).Print();
 		return;
 	}
 	for (Node<Monom>* p = pFirst; p != nullptr; p = p->pNext)

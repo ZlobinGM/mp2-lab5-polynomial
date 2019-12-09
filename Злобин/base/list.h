@@ -31,7 +31,7 @@ public:
 			pFirst = new Node<T>;
 			pFirst->data = _list.pFirst->data;
 			Node<T>* p = pFirst, *tmp;
-			for (Node<T>* _p = _list.pFirst->pNext; _p != nullptr; _p = _p->pNext;)	{
+			for (Node<T>* _p = _list.pFirst->pNext; _p != nullptr; _p = _p->pNext)	{
 				tmp = new Node<T>;
 				tmp->data = _p->data;
 				p->pNext = tmp;
@@ -71,7 +71,8 @@ public:
 
 		pFirst = new Node<T>;
 		pFirst->data = _list.pFirst->data;
-		Node<T>* p = pFirst, * tmp;
+		p = pFirst;
+		Node<T>* tmp;
 		for (Node<T>*_p = _list.pFirst->pNext; _p != nullptr; _p = _p->pNext) {
 			tmp = new Node<T>;
 			tmp->data = _p->data;

@@ -55,7 +55,7 @@ TEST(Monom, can_do_operation_multiplication)
 	string s2 = "5x1y3z3";
 	string s3 = "x2y5z6";
 	Monom m1(s1, 3), m2(s2, 3), m3(s3,3);
-	EXPECT_EQ(m3, m1*m2);
+	EXPECT_EQ(1, m3 == (m1 * m2));
 }
 
 TEST(Monom, can_do_operation_division)
@@ -64,7 +64,7 @@ TEST(Monom, can_do_operation_division)
 	string s2 = "5x1y3z3";
 	string s3 = "x0y-1z0";
 	Monom m1(s1, 3), m2(s2, 3), m3(s3, 3);
-	EXPECT_EQ(m3, m1 / m2);
+	EXPECT_EQ(1, m3 == m1 / m2);
 }
 
 TEST(Monom, can_take_the_differential)
@@ -73,7 +73,7 @@ TEST(Monom, can_take_the_differential)
 	string s2 = "x1y0z3";
 	Monom m1(s1, 3), m2(s2, 3);
 	m1.Differential('y', 2);
-	EXPECT_EQ(m2, m1);
+	EXPECT_EQ(1, m1 == m2);
 }
 
 TEST(Monom, can_take_the_integral)
@@ -82,7 +82,7 @@ TEST(Monom, can_take_the_integral)
 	string s2 = "x1y4z3";
 	Monom m1(s1, 3), m2(s2, 3);
 	m1.Integral('y', 2);
-	EXPECT_EQ(m2, m1);
+	EXPECT_EQ(1, m1 == m2);
 }
 
 TEST(Monom, can_get_pow)
@@ -97,5 +97,5 @@ TEST(Monom, can_calculate)
 	string s = "5x1y2z3";
 	vector<double> v = { 1,2,3 };
 	Monom m(s, 3);
-	EXPECT_DOUBLE_EQ(180, m.Result(v));
+	EXPECT_DOUBLE_EQ(540, m.Result(v));
 }

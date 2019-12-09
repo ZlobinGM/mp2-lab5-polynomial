@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 
@@ -19,28 +20,25 @@ struct Monom
 	Monom(string m, int total_unkowns) :power(total_unkowns) {
 		string unknowns("xyznk"), tmp, _x;
 		m.push_back(' ');
-		for (size_t i = m.length() - 1; 0 <= i; i--)
-			if (unknowns.find(m[i]) != string::npos) {
-				m.insert(i + 1, " ");
-				m.insert(i, " ");
+		m.insert(m.begin(), ' ');
+		for (string::iterator i = --m.end(); m.begin() < i; i--)
+			if (unknowns.find(*i) != string::npos) {
+				m.insert(i + 1, ' ');
+				m.insert(i, ' ');
 			}
 		stringstream s(m);
 		vector<string> v;
 		while (s >> tmp) v.push_back(tmp);
 		try {
 			c = stod(v.at(0));
+			v.erase(v.begin());
 		}
 		catch (invalid_argument) {
 			c = 1;
 		}
-		for (size_t i = 1; i < v.size(); i++)
+		for (size_t i = 0; i < v.size() - 1; i++)
 		{
 			_x = v.at(i);
-			if (i + 1 == v.size() || unknowns.find(tmp) != string::npos) {
-				tmp = "1";
-				power[unknowns.find(_x)] = stoi(tmp);
-				continue;
-			}
 			tmp = v.at(++i);
 			power[unknowns.find(_x)] = stoi(tmp);
 		}
