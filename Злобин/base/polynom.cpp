@@ -148,8 +148,8 @@ void Polynom::Insert(const Monom& m)
 	}
 	_p->data = m;
 	_p->pNext = nullptr;
-	p->pNext = _p;
 	pFirst = (p->pNext == pFirst) ? _p : pFirst;
+	p->pNext = _p;
 	length++;
 }
 
